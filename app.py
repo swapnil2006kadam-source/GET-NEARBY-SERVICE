@@ -105,6 +105,9 @@ def admin_login():
         )
 
         admin = cursor.fetchone()
+        print("EMAIL:", email)
+        print("PASSWORD:", password)
+        print("ADMIN:", admin)
 
         if admin:
 
