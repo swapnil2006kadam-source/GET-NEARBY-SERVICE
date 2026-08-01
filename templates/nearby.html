@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Nearby Services</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+</head>
+
+<body>
+
+<div class="nearby-page">
+
+    <div class="top-bar">
+
+    <h1>🌍 Get Nearby Services</h1>
+
+    <div class="top-buttons">
+
+        <a href="/dashboard" class="top-btn">
+
+            🏠 Dashboard
+
+        </a>
+
+        <a href="/logout" class="top-btn logout-btn">
+
+            🚪 Logout
+
+        </a>
+
+    </div>
+
+</div>
+
+    <div class="location-box">
+
+        <h3>📍 Current Location</h3>
+
+        <p>Latitude : <span id="lat">Loading...</span></p>
+
+        <p>Longitude : <span id="lon">Loading...</span></p>
+
+    </div>
+
+    <div class="category-grid">
+
+        <button onclick="findPlaces('hospital')">🏥 Hospital</button>
+
+        <button onclick="findPlaces('restaurant')">🍽 Restaurant</button>
+
+        <button onclick="findPlaces('mall')">🛍️ Shopping Mall</button>
+
+        <button onclick="findPlaces('pharmacy')">💊 Pharmacy</button>
+
+        <button onclick="findPlaces('fuel')">⛽ Petrol Pump</button>
+
+    </div>
+
+   <div class="results-full">
+
+    <h2>📋 Nearby Results</h2>
+
+    <div id="results-list">
+
+        <p>Select a category to search.</p>
+
+    </div>
+
+</div>
+
+<div class="map-full">
+
+    <h2>🗺 Live Map</h2>
+
+    <div id="map"></div>
+
+</div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="{{ url_for('static', filename='js/nearby.js') }}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+</head>
+
+<body>
+
+<div class="nearby-page">
+
+    <div class="top-bar">
+
+        <h1>🛡️ Admin Dashboard</h1>
+
+        <a href="/logout" class="top-btn logout-btn">
+
+            🚪 Logout
+
+        </a>
+
+    </div>
+
+    <!-- Statistics -->
+
+    <div class="stats-container">
+
+        <div class="stat-card">
+
+            <h3>👥 Total Users</h3>
+
+            <h2>{{ total_users }}</h2>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h3>📍 Total Locations</h3>
+
+            <h2>{{ total_locations }}</h2>
+
+        </div>
+
+    </div>
+
+    <!-- Latest -->
+
+    <div class="location-box">
+
+        <h2>📍 Latest User Activity</h2>
+
+        {% if location %}
+
+        <p><b>👤 Name :</b> {{ location[0] }}</p>
+
+        <p><b>📧 Email :</b> {{ location[1] }}</p>
+
+        <p><b>📍 Latitude :</b> {{ location[2] }}</p>
+
+        <p><b>📍 Longitude :</b> {{ location[3] }}</p>
+
+        <p><b>🕒 Time :</b> {{ location[4] }}</p>
+
+        {% else %}
+
+        <p>No location available.</p>
+
+        {% endif %}
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <!-- LEFT -->
+
+        <div class="history-card">
+
+            <h2>📋 User Location History</h2>
+
+            {% for row in history %}
+
+            <div class="user-card">
+
+                <h3>{{ row[0] }}</h3>
+
+                <p>📧 {{ row[1] }}</p>
+
+                <p>📍 {{ row[2] }}, {{ row[3] }}</p>
+
+                <p>🕒 {{ row[4] }}</p>
+
+                <a
+                href="https://www.google.com/maps?q={{ row[2] }},{{ row[3] }}"
+                target="_blank"
+                class="btn">
+
+                🧭 Google Maps
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="map-card">
+
+            <div id="map"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+{% if location %}
+
+const map = L.map("map").setView(
+[
+{{ location[2] }},
+{{ location[3] }}
+],
+13
+);
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+attribution:'© OpenStreetMap'
+}
+).addTo(map);
+
+{% for row in history %}
+
+L.marker(
+[
+{{ row[2] }},
+{{ row[3] }}
+]
+)
+
+.addTo(map)
+
+.bindPopup(
+
+"<b>{{ row[0] }}</b><br>{{ row[1] }}"
+
+);
+
+{% endfor %}
+
+{% endif %}
+
+</script>
+
+</body>
+
+</html>

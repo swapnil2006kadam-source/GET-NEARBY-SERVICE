@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Admin Login</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="main-container">
+
+<div class="form-card">
+
+<h1>🛡 Admin Login</h1>
+
+<p class="subtitle">
+
+Administrator Access Only
+
+</p>
+
+<form action="/admin-login" method="POST">
+
+<input
+type="email"
+name="email"
+placeholder="Admin Email"
+required>
+
+<input
+type="password"
+name="password"
+placeholder="Password"
+required>
+
+<button type="submit">
+
+Admin Login
+
+</button>
+
+</form>
+
+<a href="/" class="link">
+
+← Back to Home
+
+</a>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
