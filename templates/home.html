@@ -3,86 +3,289 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GetNearby</title>
 
-    <title>Get Nearby Services</title>
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/home.css') }}">
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="main-container">
+<!-- ================= NAVBAR ================= -->
 
-    <div class="home-card">
+<nav class="navbar">
 
-        <h1>🌍 Get Nearby Services</h1>
+<div class="container nav-container">
 
-        <p class="subtitle">
-    Find nearby <b>Hospitals</b>, <b>Restaurants</b>,
-    <b>shopping mall</b>, <b>Pharmacies</b> and
-    <b>Petrol Pumps</b> instantly using your live location.
+<a href="/" class="logo">
+
+<span class="logo-icon">📍</span>
+
+<span class="logo-text">
+
+Get<span>Nearby
+
+</span>
+
+</span>
+
+</a>
+
+<div class="nav-menu">
+
+<a href="/">Home</a>
+
+<a href="#features">Features</a>
+
+<a href="#how">How It Works</a>
+
+<a href="/nearby">Nearby Services</a>
+
+<a href="#about">About Us</a>
+
+</div>
+
+<div class="nav-buttons">
+
+<a href="/login" class="login-btn">
+
+Login
+
+</a>
+
+<a href="/register" class="start-btn">
+
+Get Started
+
+</a>
+
+</div>
+
+</div>
+
+</nav>
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+<div class="container hero-container">
+
+<div class="hero-left">
+
+<p class="hero-tag">
+
+SMART LOCATION PLATFORM
+
 </p>
 
-        <div class="section-card">
+<h1>
 
+Find Nearby
 
-    
+<span>Services</span>
 
-    <div class="btn-group">
+Instantly
 
-        <a href="/register" class="btn">
-            📝 Register
-        </a>
+</h1>
 
-        <a href="/login" class="btn">
-            🔐 Login
-        </a>
-        
+<p class="hero-description">
 
-    </div>
-    <p class="section-text">
-        Register a new account or login to
-        discover nearby services.
-    </p>
+Locate hospitals, restaurants, pharmacies,
+
+shopping malls and petrol pumps using your
+
+live GPS location in just seconds.
+
+</p>
+
+<div class="hero-buttons">
+
+<a href="/register" class="primary-btn">
+
+🚀 Get Started
+
+</a>
+
 
 </div>
 
-        <h2>🛡 Admin</h2>
+<div class="hero-stats">
 
-        <a href="/admin-login" class="btn admin-btn">
+<div>
 
-           Admin Login
+<h3>2 Sec</h3>
 
-        </a>
-        <div class="footer">
-
-    © 2026 Get Nearby Services
-
-    <br>
-
-    Flask • MySQL • Geoapify • Leaflet
+<p>Average Search</p>
 
 </div>
 
-<div class="features">
+<div>
 
-    <span>📍 Live Location</span>
+<h3>120+</h3>
 
-    <span>🗺 Google Maps Navigation</span>
-
-    <span>⚡ Fast Nearby Search</span>
+<p>Services</p>
 
 </div>
 
-    </div>
-    
+<div>
+
+<h3>100%</h3>
+
+<p>Secure</p>
 
 </div>
+
+<div>
+
+<h3>24/7</h3>
+
+<p>Available</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="hero-right">
+
+    <img src="{{ url_for('static', filename='image/hero.png') }}"
+         class="hero-phone"
+         alt="Nearby Services">
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= WHY CHOOSE ================= -->
+
+<section class="features-section" id="features">
+
+<div class="container">
+
+<div class="section-title">
+
+<p>WHY CHOOSE US</p>
+
+<h2>Why Choose GetNearby?</h2>
+
+</div>
+
+<div class="features-grid">
+
+<div class="feature-card">
+
+<div class="feature-icon">📍</div>
+
+<h3>Live GPS</h3>
+
+<p>
+
+Automatically detects your current location with one click.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-icon">🗺️</div>
+
+<h3>Interactive Maps</h3>
+
+<p>
+
+Open results directly in Google Maps navigation.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-icon">⚡</div>
+
+<h3>Lightning Fast</h3>
+
+<p>
+
+Nearby places are loaded within seconds.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-icon">🛡️</div>
+
+<h3>Secure Login</h3>
+
+<p>
+
+Separate Admin & User authentication.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-icon">🏥</div>
+
+<h3>Nearby Services</h3>
+
+<p>
+
+Hospitals, Restaurants, Fuel, Pharmacy & Malls.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="feature-icon">☁️</div>
+
+<h3>Cloud Hosted</h3>
+
+<p>
+
+Powered by Render + Railway Cloud Database.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+</div>
+
+</div>
+
+</section>
 
 </body>
 
