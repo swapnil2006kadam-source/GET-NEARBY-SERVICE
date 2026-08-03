@@ -87,34 +87,11 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
         <div class="history-card">
 
-            <h2>📋 User Location History</h2>
+    <h2>📋 Live Users</h2>
 
-            {% for row in history %}
+    <div id="users-container"></div>
 
-            <div class="user-card">
-
-                <h3>{{ row[0] }}</h3>
-
-                <p>📧 {{ row[1] }}</p>
-
-                <p>📍 {{ row[2] }}, {{ row[3] }}</p>
-
-                <p>🕒 {{ row[4] }}</p>
-
-                <a
-                href="https://www.google.com/maps?q={{ row[2] }},{{ row[3] }}"
-                target="_blank"
-                class="btn">
-
-                🧭 Google Maps
-
-                </a>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
+</div>
 
         <!-- RIGHT -->
 
@@ -130,47 +107,7 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-
-{% if location %}
-
-const map = L.map("map").setView(
-[
-{{ location[2] }},
-{{ location[3] }}
-],
-13
-);
-
-L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-{
-attribution:'© OpenStreetMap'
-}
-).addTo(map);
-
-{% for row in history %}
-
-L.marker(
-[
-{{ row[2] }},
-{{ row[3] }}
-]
-)
-
-.addTo(map)
-
-.bindPopup(
-
-"<b>{{ row[0] }}</b><br>{{ row[1] }}"
-
-);
-
-{% endfor %}
-
-{% endif %}
-
-</script>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 
 </body>
 

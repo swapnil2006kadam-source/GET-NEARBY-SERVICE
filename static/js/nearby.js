@@ -7,7 +7,15 @@ let placeMarkers = [];
 // Get User Location
 if (navigator.geolocation) {
 
-    navigator.geolocation.getCurrentPosition(loadMap, showError);
+    navigator.geolocation.watchPosition(
+        updateLocation,
+        showError,
+        {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 10000
+        }
+    );
 
 } else {
 
@@ -15,8 +23,8 @@ if (navigator.geolocation) {
 
 }
 
-// Load Map
-function loadMap(position) {
+// update location
+function updateLocation(position) {
 
     currentLat = position.coords.latitude;
     currentLon = position.coords.longitude;
@@ -43,6 +51,8 @@ function loadMap(position) {
 
     });
 
+   if (!map) {
+
     map = L.map("map").setView([currentLat, currentLon], 15);
 
     L.tileLayer(
@@ -56,6 +66,14 @@ function loadMap(position) {
         .addTo(map)
         .bindPopup("📍 You are here")
         .openPopup();
+
+} else {
+
+    userMarker.setLatLng([currentLat, currentLon]);
+
+    map.panTo([currentLat, currentLon]);
+
+}
 
 }
 
@@ -140,7 +158,7 @@ switch(category){
 
 <div class="card-top">
 
-    <<div class="place-icon">${icon}</div>
+    <div class="place-icon">${icon}</div>
 
     <div>
 

@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, jsonify, session
 from config.database import connection, cursor
-
+from datetime import datetime
 import os
 import requests
+from flask_mail import Mail, Message
+import random , time
 
 from dotenv import load_dotenv
 
@@ -12,6 +14,15 @@ GEOAPIFY_API_KEY = os.getenv("GEOAPIFY_API_KEY")
 
 
 app = Flask(__name__)
+app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
+app.config["MAIL_PORT"] = int(os.getenv("MAIL_PORT"))
+app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS") == "True"
+app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
+app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
+
+mail = Mail(app)
+
 
 app.secret_key = "get_nearby_services_secret_key"
 
@@ -59,29 +70,77 @@ def login():
         email = request.form["email"]
         password = request.form["password"]
 
-        cursor.execute(
-            """
-            SELECT * FROM users
+        cursor.execute("""
+            SELECT *
+            FROM users
             WHERE email=%s
             AND password=%s
             AND role='user'
-            """,
-            (email, password)
-        )
+        """, (email, password))
 
         user = cursor.fetchone()
 
         if user:
 
-            session["user_id"] = user[0]
-            session["user_name"] = user[1]
-            session["role"] = user[4]
+            otp = random.randint(100000, 999999)
+
+            session["login_otp"] = str(otp)
+            session["otp_user"] = user[0]
+            session["otp_name"] = user[1]
+            session["otp_role"] = user[4]
+            session["otp_time"] = time.time()
+
+            msg = Message(
+                subject="Nearby Services Login OTP",
+                recipients=[email]
+            )
+
+            msg.body = f"""
+Hello {user[1]},
+
+Your Login OTP is:
+
+{otp}
+
+This OTP is valid for 5 minutes.
+"""
+
+            mail.send(msg)
+
+            return redirect("/verify-login-otp")
+
+        return "Invalid Email or Password"
+
+    return render_template("login.html")
+
+@app.route("/verify-login-otp", methods=["GET","POST"])
+def verify_login_otp():
+
+    if request.method=="POST":
+
+        entered=request.form["otp"]
+
+        if time.time()-session["otp_time"]>300:
+
+            return "OTP Expired"
+
+        if entered==session["login_otp"]:
+
+            session["user_id"]=session["otp_user"]
+            session["user_name"]=session["otp_name"]
+            session["role"]=session["otp_role"]
+
+            session.pop("login_otp")
+            session.pop("otp_user")
+            session.pop("otp_name")
+            session.pop("otp_role")
+            session.pop("otp_time")
 
             return redirect("/dashboard")
 
-        return "Invalid User Login"
+        return "Invalid OTP"
 
-    return render_template("login.html")
+    return render_template("verify_login_otp.html")
 
 
 # ---------------- ADMIN LOGIN ---------------- #
@@ -203,6 +262,62 @@ def admin_dashboard():
         total_locations=total_locations
     )
 
+@app.route("/live-locations")
+def live_locations():
+
+    if "admin_id" not in session:
+        return jsonify([])
+
+    connection.ping(reconnect=True)
+
+    cursor.execute("""
+        SELECT
+            users.id,
+            users.name,
+            users.email,
+            user_locations.latitude,
+            user_locations.longitude,
+            user_locations.created_at
+
+        FROM users
+
+        JOIN user_locations
+        ON users.id = user_locations.user_id
+
+        WHERE users.role='user'
+
+        ORDER BY users.name
+    """)
+
+    rows = cursor.fetchall()
+
+    users = []
+
+    for row in rows:
+
+        last_seen = row[5]
+
+        seconds = int((datetime.now() - last_seen).total_seconds())
+
+        if seconds <= 30:
+            status = "Online"
+        else:
+            status = "Offline"
+
+        users.append({
+
+            "id": row[0],
+            "name": row[1],
+            "email": row[2],
+            "lat": float(row[3]),
+            "lon": float(row[4]),
+            "time": str(last_seen),
+            "seconds": seconds,
+            "status": status
+
+        })
+
+    return jsonify(users)
 
 # ---------------- NEARBY ---------------- #
 
@@ -342,5 +457,27 @@ def logout():
     return redirect("/")
 
 
+# DELETE LOCATION
+@app.route("/delete-location/<int:user_id>", methods=["POST"])
+def delete_location(user_id):
+
+    if "admin_id" not in session:
+        return jsonify({"status": "unauthorized"}), 401
+
+    connection.ping(reconnect=True)
+
+    cursor.execute("""
+        DELETE FROM user_locations
+        WHERE user_id=%s
+    """, (user_id,))
+
+    connection.commit()
+
+    return jsonify({
+        "status": "success"
+    })
+
+
+    
 if __name__ == "__main__":
     app.run(debug=True)

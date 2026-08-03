@@ -1,6 +1,6 @@
 import mysql.connector
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -9,7 +9,8 @@ connection = mysql.connector.connect(
     user=os.getenv("DB_USER"),
     password=os.getenv("DB_PASSWORD"),
     database=os.getenv("DB_NAME"),
-    port=int(os.getenv("DB_PORT"))
+    port=int(os.getenv("DB_PORT")),
+    autocommit=True
 )
 
-cursor = connection.cursor()
+cursor = connection.cursor(buffered=True)
