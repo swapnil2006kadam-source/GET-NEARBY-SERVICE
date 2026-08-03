@@ -145,6 +145,8 @@ def admin_dashboard():
     if "admin_id" not in session:
         return redirect("/admin-login")
 
+    connection.ping(reconnect=True, attempts=3, delay=2)
+
     # Latest Location
     cursor.execute("""
         SELECT
@@ -311,21 +313,24 @@ def save_location():
 
     user_id = session["user_id"]
 
-    cursor.execute(
-    """
+    connection.ping(reconnect=True, attempts=3, delay=2)
+
+    cursor.execute("""
     INSERT INTO user_locations
     (user_id, latitude, longitude)
-    VALUES(%s,%s,%s)
-    """,
-    (user_id, latitude, longitude)
-)
+    VALUES (%s, %s, %s)
+
+    ON DUPLICATE KEY UPDATE
+    latitude = VALUES(latitude),
+    longitude = VALUES(longitude),
+    created_at = CURRENT_TIMESTAMP
+    """, (user_id, latitude, longitude))
 
     connection.commit()
 
     return jsonify({
         "status": "success"
     })
-
 
 # ---------------- LOGOUT ---------------- #
 
