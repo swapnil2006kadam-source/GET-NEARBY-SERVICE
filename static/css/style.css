@@ -1049,152 +1049,6 @@ background:#d92d20;
 
 }
 
-.otp-modal{
-
-position:fixed;
-
-top:0;
-
-left:0;
-
-width:100%;
-
-height:100%;
-
-background:rgba(0,0,0,.6);
-
-display:none;
-
-justify-content:center;
-
-align-items:center;
-
-z-index:999;
-
-}
-
-.otp-box{
-
-width:400px;
-
-background:#1d2433;
-
-padding:30px;
-
-border-radius:15px;
-
-text-align:center;
-
-}
-
-.otp-box h2{
-
-margin-bottom:15px;
-
-}
-
-.otp-box input{
-
-width:100%;
-
-padding:12px;
-
-font-size:22px;
-
-text-align:center;
-
-letter-spacing:8px;
-
-margin:20px 0;
-
-}
-
-.otp-box button{
-
-width:100%;
-
-padding:12px;
-
-font-size:18px;
-
-cursor:pointer;
-
-}
-.otp-modal{
-
-display:none;
-
-position:fixed;
-
-top:0;
-
-left:0;
-
-width:100%;
-
-height:100%;
-
-background:rgba(0,0,0,.7);
-
-justify-content:center;
-
-align-items:center;
-
-z-index:999;
-
-}
-
-.otp-box{
-
-width:400px;
-
-background:#222c3d;
-
-padding:30px;
-
-border-radius:15px;
-
-text-align:center;
-
-}
-
-.otp-box input{
-
-width:100%;
-
-padding:15px;
-
-font-size:22px;
-
-text-align:center;
-
-margin:20px 0;
-
-}
-
-.otp-box button{
-
-width:100%;
-
-padding:15px;
-
-}
-
-.otp-text{
-    color:#cbd5e1;
-    text-align:center;
-    margin-top:15px;
-    margin-bottom:6px;
-    font-size:16px;
-}
-
-.otp-email{
-    text-align:center;
-    color:#4da3ff;
-    font-weight:600;
-    margin-bottom:25px;
-    word-break:break-all;
-}
 .big-btn{
 
 display:block;
@@ -1288,5 +1142,73 @@ transform:translateY(-3px);
     cursor:pointer;
 
     font-size:22px;
+
+}
+
+/* ============================= */
+/* OTP SECTION */
+/* ============================= */
+
+#otpSection{
+
+    display:none;
+
+    margin-top:25px;
+
+    padding:20px;
+
+    background:#243045;
+
+    border:1px solid #334155;
+
+    border-radius:15px;
+
+    animation:fadeIn .3s ease;
+
+}
+
+.otp-info{
+
+    color:white;
+
+    text-align:center;
+
+    font-size:16px;
+
+    line-height:28px;
+
+    margin-bottom:18px;
+
+    font-weight:600;
+
+}
+
+#verifyBtn{
+
+    background:#16a34a;
+
+}
+
+#verifyBtn:hover{
+
+    background:#15803d;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+        transform:translateY(-10px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
 
 }

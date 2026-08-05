@@ -4,9 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>User Login</title>
 
@@ -33,81 +31,83 @@
 
         <form id="loginForm">
 
-   <div class="input-group">
+            <div class="input-group">
 
-    <span class="input-icon">📧</span>
+                <span class="input-icon">📧</span>
 
-    <input
-        type="email"
-        name="email"
-        id="email"
-        placeholder="Email Address"
-        required>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Email Address"
+                    required>
 
-</div>
+            </div>
 
-<div class="input-group">
+            <div class="input-group">
 
-    <span class="input-icon">🔒</span>
+                <span class="input-icon">🔒</span>
 
-    <input
-        type="password"
-        name="password"
-        id="password"
-        placeholder="Password"
-        required>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    required>
 
-    <span id="togglePassword" class="eye">
+                <span
+                    id="togglePassword"
+                    class="eye">
 
-        👁️
+                    👁️
 
-    </span>
+                </span>
 
-</div>
-    <button type="submit">
+            </div>
 
-    🔓 Sign In
+            <button
+                type="button"
+                id="sendOtpBtn">
 
-</button>
+                📧 Send OTP
 
-</form>
+            </button>
 
+        </form>
 
-<div id="otpModal" class="otp-modal">
+        <div id="otpSection" style="display:none; margin-top:20px;">
 
-    <div class="otp-box">
+            <p class="otp-info">
 
-        <h2>📧 Verify Login OTP</h2>
+                📧 OTP has been sent to your registered email.
 
-        <p class="otp-text">
-    OTP sent to your registered email
-</p>
+            </p>
 
-<p class="otp-email">
-    <span id="otpEmail"></span>
-</p>
+            <div class="input-group">
 
-        <input
-        type="number"
-        id="otp"
-        maxlength="6"
-        placeholder="Enter 6-digit OTP">
+                <span class="input-icon">
 
-        <button id="verifyBtn">
+                    🔐
 
-            Verify OTP
+                </span>
 
-        </button>
+                <input
+                    type="text"
+                    id="otp"
+                    maxlength="6"
+                    placeholder="Enter 6-digit OTP">
 
-        <p id="timer">
+            </div>
 
-            Resend OTP (30)
+            <button
+                type="button"
+                id="verifyBtn">
 
-        </p>
+                ✅ Verify & Login
 
-    </div>
+            </button>
 
-</div>
+        </div>
 
         <a href="/register" class="link">
 
@@ -127,71 +127,59 @@
 
 <script>
 
-const form=document.getElementById("loginForm");
+const password=document.getElementById("password");
+const toggle=document.getElementById("togglePassword");
 
-form.addEventListener("submit",function(e){
+toggle.onclick=function(){
 
-e.preventDefault();
+    if(password.type==="password"){
 
-const formData=new FormData(form);
+        password.type="text";
+        toggle.innerHTML="🙈";
 
-fetch("/login",{
+    }
 
-method:"POST",
+    else{
 
-body:formData
+        password.type="password";
+        toggle.innerHTML="👁️";
 
-})
-
-.then(res=>res.json())
-
-.then(data=>{
-
-if(data.status=="success"){
-    document.getElementById("otp").value="";
-
-document.getElementById("otpModal").style.display="flex";
-
-document.getElementById("otpEmail").innerText=data.email;
+    }
 
 }
-
-else{
-
-alert(data.message);
-
-}
-
-});
-
-});
 
 </script>
+
 <script>
 
-document.getElementById("verifyBtn").addEventListener("click", function () {
+const form=document.getElementById("loginForm");
 
-    const formData = new FormData();
+document.getElementById("sendOtpBtn").addEventListener("click",function(){
 
-    formData.append(
-        "otp",
-        document.getElementById("otp").value
-    );
+    const formData=new FormData(form);
 
-    fetch("/verify-login-otp", {
-        method: "POST",
-        body: formData
+    fetch("/login",{
+
+        method:"POST",
+
+        body:formData
+
     })
 
-    .then(res => res.json())
+    .then(res=>res.json())
 
-    .then(data => {
+    .then(data=>{
 
-        if (data.status == "success") {
+        if(data.status==="success"){
 
-            window.location = "/dashboard";
+            document.getElementById("otpSection").style.display="block";
 
-        } else {
+            document.querySelector(".otp-info").innerHTML=
+            "📧 OTP sent to <b>"+data.email+"</b>";
+
+        }
+
+        else{
 
             alert(data.message);
 
@@ -201,28 +189,42 @@ document.getElementById("verifyBtn").addEventListener("click", function () {
 
 });
 
-</script>
+document.getElementById("verifyBtn").addEventListener("click",function(){
 
-<script>
+    const formData=new FormData();
 
-const password = document.getElementById("password");
-const toggle = document.getElementById("togglePassword");
+    formData.append(
+        "otp",
+        document.getElementById("otp").value
+    );
 
-toggle.onclick = function () {
+    fetch("/verify-login-otp",{
 
-    if (password.type === "password") {
+        method:"POST",
 
-        password.type = "text";
-        toggle.innerHTML = "🙈";
+        body:formData
 
-    } else {
+    })
 
-        password.type = "password";
-        toggle.innerHTML = "👁️";
+    .then(res=>res.json())
 
-    }
+    .then(data=>{
 
-}
+        if(data.status==="success"){
+
+            window.location="/dashboard";
+
+        }
+
+        else{
+
+            alert(data.message);
+
+        }
+
+    });
+
+});
 
 </script>
 
