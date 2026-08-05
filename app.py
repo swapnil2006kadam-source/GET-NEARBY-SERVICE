@@ -73,7 +73,6 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
 
-    # Connect to database
     connection, cursor = get_connection()
 
     email = request.form["email"]
@@ -98,7 +97,6 @@ def login():
             "message": "Invalid Email or Password"
         })
 
-    # Generate OTP
     otp = random.randint(100000, 999999)
 
     session["login_otp"] = str(otp)
@@ -138,6 +136,23 @@ GetNearby Team
 
         print("STEP 3 - About to send email")
 
+        import socket
+
+        print("Checking SMTP connection...")
+
+        socket.setdefaulttimeout(10)
+
+        try:
+            s = socket.create_connection(
+                (app.config["MAIL_SERVER"], app.config["MAIL_PORT"])
+            )
+
+            print("✅ SMTP CONNECTED!")
+            s.close()
+
+        except Exception as smtp_error:
+            print("❌ SOCKET ERROR:", repr(smtp_error))
+
         mail.send(msg)
 
         print("STEP 4 - OTP Sent Successfully")
@@ -145,7 +160,7 @@ GetNearby Team
     except Exception as e:
 
         print("========== MAIL ERROR ==========")
-        print(str(e))
+        print(repr(e))
 
         return jsonify({
             "status": "error",
