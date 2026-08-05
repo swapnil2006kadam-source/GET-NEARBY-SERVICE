@@ -5,7 +5,8 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>User Dashboard</title>
 
@@ -28,78 +29,131 @@ href="{{ url_for('static', filename='css/style.css') }}">
 
         <p>
 
-            Ready to explore nearby services?
+            Ready to discover nearby services?
 
         </p>
 
     </div>
 
-    <!-- Cards -->
+    <!-- Main Grid -->
 
     <div class="dashboard-grid">
 
-        <div class="dashboard-card">
+        <!-- Search -->
 
-            <h2>🌍 Find Nearby</h2>
+        <div class="dashboard-card service-card">
+
+            <div class="dashboard-icon">
+
+                🌍
+
+            </div>
+
+            <h2>Find Nearby Services</h2>
 
             <p>
 
-                Search nearby hospitals,
-                restaurants, shopping malls and more.
+                Search hospitals, restaurants,
+                pharmacies, shopping malls and
+                petrol pumps around your location.
 
             </p>
 
             <a href="/nearby" class="btn">
 
-                Open
+                🚀 Start Exploring
 
             </a>
 
         </div>
 
-        <div class="dashboard-card">
+        <!-- Profile -->
 
-            <h2>👤 My Account</h2>
+        <div class="dashboard-card profile-card">
+
+            <div class="dashboard-icon">
+
+                👤
+
+            </div>
+
+            <h2>{{ name }}</h2>
 
             <p>
 
-                Logged in as
-
-                <b>{{ name }}</b>
+                Logged in successfully
 
             </p>
 
-            <button disabled>
+            <div class="profile-role">
 
-                User
+                <span>Role</span>
 
-            </button>
+                <strong>User</strong>
+
+            </div>
 
         </div>
 
     </div>
 
-    <!-- Features -->
+    <!-- Services -->
 
-    <div class="feature-box">
+    <div class="services-section">
 
-        <h2>🚀 Available Services</h2>
+        <h2>
+
+            🚀 Available Services
+
+        </h2>
 
         <div class="feature-grid">
 
-            <div>🏥 Hospital</div>
+            <div class="feature-item">
 
-            <div>🍽 Restaurant</div>
+                🏥
 
-            <div>🏧 Mall</div>
+                <span>Hospital</span>
 
-            <div>💊 Pharmacy</div>
+            </div>
 
-            <div>⛽ Petrol Pump</div>
+            <div class="feature-item">
+
+                🍽️
+
+                <span>Restaurant</span>
+
+            </div>
+
+            <div class="feature-item">
+
+                💊
+
+                <span>Pharmacy</span>
+
+            </div>
+
+            <div class="feature-item">
+
+                🛍️
+
+                <span>Shopping Mall</span>
+
+            </div>
+
+            <div class="feature-item">
+
+                ⛽
+
+                <span>Petrol Pump</span>
+
+            </div>
 
         </div>
 
     </div>
+
+    <!-- Logout -->
 
     <a href="/logout" class="btn logout-dashboard">
 

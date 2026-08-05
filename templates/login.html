@@ -31,36 +31,83 @@
             Login to continue exploring nearby services.
         </p>
 
-        <form action="/login" method="POST">
+        <form id="loginForm">
 
-            <input
-                type="email"
-                name="email"
-                placeholder="📧 Email Address"
-                required>
+   <div class="input-group">
 
-            <div class="password-box">
+    <span class="input-icon">📧</span>
 
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="🔒 Password"
-                    required>
+    <input
+        type="email"
+        name="email"
+        id="email"
+        placeholder="Email Address"
+        required>
 
-                <span id="togglePassword">
-                    👁️
-                </span>
+</div>
 
-            </div>
+<div class="input-group">
 
-            <button type="submit">
+    <span class="input-icon">🔒</span>
 
-                🚀 Login
+    <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Password"
+        required>
 
-            </button>
+    <span id="togglePassword" class="eye">
 
-        </form>
+        👁️
+
+    </span>
+
+</div>
+    <button type="submit">
+
+    🔓 Sign In
+
+</button>
+
+</form>
+
+
+<div id="otpModal" class="otp-modal">
+
+    <div class="otp-box">
+
+        <h2>📧 Verify Login OTP</h2>
+
+        <p class="otp-text">
+    OTP sent to your registered email
+</p>
+
+<p class="otp-email">
+    <span id="otpEmail"></span>
+</p>
+
+        <input
+        type="number"
+        id="otp"
+        maxlength="6"
+        placeholder="Enter 6-digit OTP">
+
+        <button id="verifyBtn">
+
+            Verify OTP
+
+        </button>
+
+        <p id="timer">
+
+            Resend OTP (30)
+
+        </p>
+
+    </div>
+
+</div>
 
         <a href="/register" class="link">
 
@@ -80,29 +127,100 @@
 
 <script>
 
-const password =
-document.getElementById("password");
+const form=document.getElementById("loginForm");
 
-const toggle =
-document.getElementById("togglePassword");
+form.addEventListener("submit",function(e){
 
-toggle.onclick = function(){
+e.preventDefault();
 
-if(password.type==="password"){
+const formData=new FormData(form);
 
-password.type="text";
+fetch("/login",{
 
-toggle.innerHTML="🙈";
+method:"POST",
+
+body:formData
+
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+if(data.status=="success"){
+    document.getElementById("otp").value="";
+
+document.getElementById("otpModal").style.display="flex";
+
+document.getElementById("otpEmail").innerText=data.email;
 
 }
 
 else{
 
-password.type="password";
-
-toggle.innerHTML="👁️";
+alert(data.message);
 
 }
+
+});
+
+});
+
+</script>
+<script>
+
+document.getElementById("verifyBtn").addEventListener("click", function () {
+
+    const formData = new FormData();
+
+    formData.append(
+        "otp",
+        document.getElementById("otp").value
+    );
+
+    fetch("/verify-login-otp", {
+        method: "POST",
+        body: formData
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        if (data.status == "success") {
+
+            window.location = "/dashboard";
+
+        } else {
+
+            alert(data.message);
+
+        }
+
+    });
+
+});
+
+</script>
+
+<script>
+
+const password = document.getElementById("password");
+const toggle = document.getElementById("togglePassword");
+
+toggle.onclick = function () {
+
+    if (password.type === "password") {
+
+        password.type = "text";
+        toggle.innerHTML = "🙈";
+
+    } else {
+
+        password.type = "password";
+        toggle.innerHTML = "👁️";
+
+    }
 
 }
 

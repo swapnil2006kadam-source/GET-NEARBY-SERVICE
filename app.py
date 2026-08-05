@@ -65,83 +65,90 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
-    if request.method == "POST":
+    # Show login page
+    if request.method == "GET":
+        return render_template("login.html")
 
-        email = request.form["email"]
-        password = request.form["password"]
+    # Handle login
+    email = request.form["email"]
+    password = request.form["password"]
 
-        cursor.execute("""
-            SELECT *
-            FROM users
-            WHERE email=%s
-            AND password=%s
-            AND role='user'
-        """, (email, password))
+    cursor.execute("""
+        SELECT *
+        FROM users
+        WHERE email=%s
+        AND password=%s
+        AND role='user'
+    """, (email, password))
 
-        user = cursor.fetchone()
+    user = cursor.fetchone()
 
-        if user:
+    if not user:
+        return jsonify({
+            "status": "error",
+            "message": "Invalid Email or Password"
+        })
 
-            otp = random.randint(100000, 999999)
+    otp = random.randint(100000, 999999)
 
-            session["login_otp"] = str(otp)
-            session["otp_user"] = user[0]
-            session["otp_name"] = user[1]
-            session["otp_role"] = user[4]
-            session["otp_time"] = time.time()
+    session["login_otp"] = str(otp)
+    session["otp_user"] = user[0]
+    session["otp_name"] = user[1]
+    session["otp_role"] = user[4]
+    session["otp_time"] = time.time()
 
-            msg = Message(
-                subject="Nearby Services Login OTP",
-                recipients=[email]
-            )
+    msg = Message(
+        subject="Nearby Services Login OTP",
+        recipients=[email]
+    )
 
-            msg.body = f"""
+    msg.body = f"""
 Hello {user[1]},
 
-Your Login OTP is:
+Your OTP is:
 
 {otp}
 
-This OTP is valid for 5 minutes.
+Valid for 5 minutes.
 """
 
-            mail.send(msg)
+    mail.send(msg)
 
-            return redirect("/verify-login-otp")
+    return jsonify({
+        "status": "success",
+        "email": email
+    })
 
-        return "Invalid Email or Password"
-
-    return render_template("login.html")
-
-@app.route("/verify-login-otp", methods=["GET","POST"])
+@app.route("/verify-login-otp", methods=["POST"])
 def verify_login_otp():
 
-    if request.method=="POST":
+    entered = request.form["otp"]
 
-        entered=request.form["otp"]
+    if time.time() - session["otp_time"] > 300:
+        return jsonify({
+            "status": "error",
+            "message": "OTP Expired"
+        })
 
-        if time.time()-session["otp_time"]>300:
+    if entered != session["login_otp"]:
+        return jsonify({
+            "status": "error",
+            "message": "Invalid OTP"
+        })
 
-            return "OTP Expired"
+    session["user_id"] = session["otp_user"]
+    session["user_name"] = session["otp_name"]
+    session["role"] = session["otp_role"]
 
-        if entered==session["login_otp"]:
+    session.pop("login_otp")
+    session.pop("otp_user")
+    session.pop("otp_name")
+    session.pop("otp_role")
+    session.pop("otp_time")
 
-            session["user_id"]=session["otp_user"]
-            session["user_name"]=session["otp_name"]
-            session["role"]=session["otp_role"]
-
-            session.pop("login_otp")
-            session.pop("otp_user")
-            session.pop("otp_name")
-            session.pop("otp_role")
-            session.pop("otp_time")
-
-            return redirect("/dashboard")
-
-        return "Invalid OTP"
-
-    return render_template("verify_login_otp.html")
-
+    return jsonify({
+        "status": "success"
+    })
 
 # ---------------- ADMIN LOGIN ---------------- #
 
@@ -477,7 +484,10 @@ def delete_location(user_id):
         "status": "success"
     })
 
+@app.route("/welcome")
+def welcome():
 
+    return render_template("welcome.html")
     
 if __name__ == "__main__":
     app.run(debug=True)

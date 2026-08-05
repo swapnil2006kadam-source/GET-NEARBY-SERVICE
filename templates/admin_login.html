@@ -31,17 +31,37 @@ Administrator Access Only
 
 <form action="/admin-login" method="POST">
 
-<input
-type="email"
-name="email"
-placeholder="Admin Email"
-required>
+<div class="input-group">
 
-<input
-type="password"
-name="password"
-placeholder="Password"
-required>
+    <span class="input-icon">📧</span>
+
+    <input
+        type="email"
+        name="email"
+        id="email"
+        placeholder="Email Address"
+        required>
+
+</div>
+
+<div class="input-group">
+
+    <span class="input-icon">🔒</span>
+
+    <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Password"
+        required>
+
+    <span id="togglePassword" class="eye">
+
+        👁️
+
+    </span>
+
+</div>
 
 <button type="submit">
 
@@ -60,6 +80,29 @@ Admin Login
 </div>
 
 </div>
+
+<script>
+
+const password = document.getElementById("password");
+const toggle = document.getElementById("togglePassword");
+
+toggle.onclick = function () {
+
+    if (password.type === "password") {
+
+        password.type = "text";
+        toggle.innerHTML = "🙈";
+
+    } else {
+
+        password.type = "password";
+        toggle.innerHTML = "👁️";
+
+    }
+
+}
+
+</script>
 
 </body>
 

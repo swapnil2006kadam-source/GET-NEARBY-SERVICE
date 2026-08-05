@@ -3,22 +3,23 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GetNearby</title>
+    <title>GetNearby</title>
 
-<link rel="stylesheet"
-href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/home.css') }}">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
 
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
 
 </head>
 
@@ -36,9 +37,7 @@ rel="stylesheet">
 
 <span class="logo-text">
 
-Get<span>Nearby
-
-</span>
+Get<span>Nearby</span>
 
 </span>
 
@@ -46,17 +45,11 @@ Get<span>Nearby
 
 <div class="nav-menu">
 
-<a href="/">Home</a>
+<li><a href="#">Home</a></li>
 
-<a href="#features">Features</a>
+<li><a href="#features">Features</a></li>
 
-<a href="#how">How It Works</a>
-
-<a href="/nearby">Nearby Services</a>
-
-<a href="#about">About Us</a>
-
-<a href="/admin-login">Admin</a>
+<li><a href="/admin-login">Admin</a></li>
 
 </div>
 
@@ -68,7 +61,7 @@ Login
 
 </a>
 
-<a href="/register" class="start-btn">
+<a href="/welcome" class="start-btn">
 
 Get Started
 
@@ -107,21 +100,19 @@ Instantly
 <p class="hero-description">
 
 Locate hospitals, restaurants, pharmacies,
-
-shopping malls and petrol pumps using your
-
-live GPS location in just seconds.
+shopping malls and petrol pumps
+using your live GPS location
+within seconds.
 
 </p>
 
 <div class="hero-buttons">
 
-<a href="/register" class="primary-btn">
+<a href="/welcome" class="primary-btn">
 
 🚀 Get Started
 
 </a>
-
 
 </div>
 
@@ -139,7 +130,7 @@ live GPS location in just seconds.
 
 <h3>120+</h3>
 
-<p>Services</p>
+<p>Nearby Places</p>
 
 </div>
 
@@ -147,7 +138,7 @@ live GPS location in just seconds.
 
 <h3>100%</h3>
 
-<p>Secure</p>
+<p>Secure Login</p>
 
 </div>
 
@@ -165,9 +156,11 @@ live GPS location in just seconds.
 
 <div class="hero-right">
 
-    <img src="{{ url_for('static', filename='image/hero.png') }}"
-         class="hero-phone"
-         alt="Nearby Services">
+<img src="{{ url_for('static', filename='image/hero.png') }}"
+
+class="hero-phone"
+
+alt="Nearby Services">
 
 </div>
 
@@ -175,9 +168,11 @@ live GPS location in just seconds.
 
 </section>
 
-<!-- ================= WHY CHOOSE ================= -->
+<!-- ================= FEATURES ================= -->
 
-<section class="features-section" id="features">
+<section class="features-section"
+
+id="features">
 
 <div class="container">
 
@@ -199,7 +194,8 @@ live GPS location in just seconds.
 
 <p>
 
-Automatically detects your current location with one click.
+Automatically detects your
+current location.
 
 </p>
 
@@ -209,11 +205,12 @@ Automatically detects your current location with one click.
 
 <div class="feature-icon">🗺️</div>
 
-<h3>Interactive Maps</h3>
+<h3>Navigation</h3>
 
 <p>
 
-Open results directly in Google Maps navigation.
+Navigate directly with
+Google Maps.
 
 </p>
 
@@ -223,11 +220,12 @@ Open results directly in Google Maps navigation.
 
 <div class="feature-icon">⚡</div>
 
-<h3>Lightning Fast</h3>
+<h3>Fast Search</h3>
 
 <p>
 
-Nearby places are loaded within seconds.
+Nearby places load in
+just seconds.
 
 </p>
 
@@ -237,11 +235,12 @@ Nearby places are loaded within seconds.
 
 <div class="feature-icon">🛡️</div>
 
-<h3>Secure Login</h3>
+<h3>OTP Login</h3>
 
 <p>
 
-Separate Admin & User authentication.
+Secure Login using
+Email OTP Verification.
 
 </p>
 
@@ -255,7 +254,11 @@ Separate Admin & User authentication.
 
 <p>
 
-Hospitals, Restaurants, Fuel, Pharmacy & Malls.
+Hospitals,
+Restaurants,
+Pharmacy,
+Shopping Mall,
+Fuel Station.
 
 </p>
 
@@ -265,11 +268,12 @@ Hospitals, Restaurants, Fuel, Pharmacy & Malls.
 
 <div class="feature-icon">☁️</div>
 
-<h3>Cloud Hosted</h3>
+<h3>Cloud Database</h3>
 
 <p>
 
-Powered by Render + Railway Cloud Database.
+Powered by Railway
+and Geoapify API.
 
 </p>
 
@@ -283,12 +287,49 @@ Powered by Render + Railway Cloud Database.
 
 
 
-</div>
+<!-- ================= FOOTER ================= -->
 
-</div>
+<footer class="footer">
 
-</section>
+    <div class="container">
 
+        <h3>GetNearby</h3>
+
+        <p>
+            Smart Location Based Web Application for finding nearby
+            hospitals, restaurants, pharmacies, shopping malls and fuel stations.
+        </p>
+
+        <div class="footer-tech">
+
+            <span>🐍 Python</span>
+            <span>⚡ Flask</span>
+            <span>🗄️ MySQL</span>
+            <span>🗺️ Leaflet</span>
+            <span>📍 Geoapify API</span>
+            <span>🌐 HTML</span>
+            <span>🎨 CSS</span>
+            <span>📜 JavaScript</span>
+
+        </div>
+
+        <hr>
+
+        <p class="developer">
+
+            Developed by <strong>Swapnil Babasaheb Kadam</strong><br>
+
+        </p>
+
+        <p class="copyright">
+
+            © 2026 GetNearby. All Rights Reserved.
+
+        </p>
+
+    </div>
+
+</footer>
 </body>
 
 </html>
