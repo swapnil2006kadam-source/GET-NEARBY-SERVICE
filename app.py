@@ -70,6 +70,7 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
 
+    # Connect to database
     connection, cursor = get_connection()
 
     email = request.form["email"]
@@ -94,6 +95,7 @@ def login():
             "message": "Invalid Email or Password"
         })
 
+    # Generate OTP
     otp = random.randint(100000, 999999)
 
     session["login_otp"] = str(otp)
@@ -102,12 +104,23 @@ def login():
     session["otp_role"] = user[4]
     session["otp_time"] = time.time()
 
-    msg = Message(
-        subject="Nearby Services Login OTP",
-        recipients=[email]
-    )
+    try:
 
-    msg.body = f"""
+        print("========== LOGIN DEBUG ==========")
+        print("STEP 1")
+        print("MAIL_SERVER:", app.config["MAIL_SERVER"])
+        print("MAIL_PORT:", app.config["MAIL_PORT"])
+        print("MAIL_USERNAME:", app.config["MAIL_USERNAME"])
+        print("MAIL_DEFAULT_SENDER:", app.config["MAIL_DEFAULT_SENDER"])
+
+        print("STEP 2 - Creating Message")
+
+        msg = Message(
+            subject="Nearby Services Login OTP",
+            recipients=[email]
+        )
+
+        msg.body = f"""
 Hello {user[1]},
 
 Your OTP is:
@@ -120,15 +133,16 @@ Regards,
 GetNearby Team
 """
 
-    try:
+        print("STEP 3 - About to send email")
 
-        print("Sending OTP...")
         mail.send(msg)
-        print("OTP Sent Successfully")
+
+        print("STEP 4 - OTP Sent Successfully")
 
     except Exception as e:
 
-        print("MAIL ERROR:", e)
+        print("========== MAIL ERROR ==========")
+        print(str(e))
 
         return jsonify({
             "status": "error",
@@ -139,7 +153,6 @@ GetNearby Team
         "status": "success",
         "email": email
     })
-
 @app.route("/verify-login-otp", methods=["POST"])
 def verify_login_otp():
 
