@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, jsonify, session
-from config.database import connection, cursor
+from config.database import get_connection
 from datetime import datetime
 import os
 import requests
@@ -39,6 +39,8 @@ def home():
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
+    connection, cursor = get_connection()
+
     if request.method == "POST":
 
         name = request.form["name"]
@@ -62,11 +64,12 @@ def register():
 
 # ---------------- USER LOGIN ---------------- #
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET","POST"])
 def login():
 
-    # Show login page
-    if request.method == "GET":
+    connection, cursor = get_connection()
+
+    if request.method=="GET":
         return render_template("login.html")
 
     # Handle login
@@ -152,10 +155,12 @@ def verify_login_otp():
 
 # ---------------- ADMIN LOGIN ---------------- #
 
-@app.route("/admin-login", methods=["GET", "POST"])
+@app.route("/admin-login", methods=["GET","POST"])
 def admin_login():
 
-    if request.method == "POST":
+    connection, cursor = get_connection()
+
+    if request.method=="POST":
 
         email = request.form["email"]
         password = request.form["password"]
@@ -207,11 +212,11 @@ def dashboard():
 
 @app.route("/admin-dashboard")
 def admin_dashboard():
+    connection, cursor = get_connection()
 
     if "admin_id" not in session:
         return redirect("/admin-login")
 
-    connection.ping(reconnect=True, attempts=3, delay=2)
 
     # Latest Location
     cursor.execute("""
@@ -271,11 +276,12 @@ def admin_dashboard():
 
 @app.route("/live-locations")
 def live_locations():
+    connection, cursor = get_connection()
 
     if "admin_id" not in session:
         return jsonify([])
 
-    connection.ping(reconnect=True)
+    
 
     cursor.execute("""
         SELECT
@@ -427,6 +433,7 @@ def get_nearby():
 
 @app.route("/save-location", methods=["POST"])
 def save_location():
+    connection, cursor = get_connection()
 
     data = request.get_json()
 
@@ -435,7 +442,6 @@ def save_location():
 
     user_id = session["user_id"]
 
-    connection.ping(reconnect=True, attempts=3, delay=2)
 
     cursor.execute("""
     INSERT INTO user_locations
@@ -467,11 +473,11 @@ def logout():
 # DELETE LOCATION
 @app.route("/delete-location/<int:user_id>", methods=["POST"])
 def delete_location(user_id):
+    connection, cursor = get_connection()
 
     if "admin_id" not in session:
         return jsonify({"status": "unauthorized"}), 401
 
-    connection.ping(reconnect=True)
 
     cursor.execute("""
         DELETE FROM user_locations
