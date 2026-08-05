@@ -64,15 +64,14 @@ def register():
 
 # ---------------- USER LOGIN ---------------- #
 
-@app.route("/login", methods=["GET","POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
+
+    if request.method == "GET":
+        return render_template("login.html")
 
     connection, cursor = get_connection()
 
-    if request.method=="GET":
-        return render_template("login.html")
-
-    # Handle login
     email = request.form["email"]
     password = request.form["password"]
 
@@ -85,6 +84,9 @@ def login():
     """, (email, password))
 
     user = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
 
     if not user:
         return jsonify({
@@ -112,10 +114,26 @@ Your OTP is:
 
 {otp}
 
-Valid for 5 minutes.
+This OTP is valid for 5 minutes.
+
+Regards,
+GetNearby Team
 """
 
-    mail.send(msg)
+    try:
+
+        print("Sending OTP...")
+        mail.send(msg)
+        print("OTP Sent Successfully")
+
+    except Exception as e:
+
+        print("MAIL ERROR:", e)
+
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        })
 
     return jsonify({
         "status": "success",
@@ -127,13 +145,21 @@ def verify_login_otp():
 
     entered = request.form["otp"]
 
+    if "login_otp" not in session:
+        return jsonify({
+            "status": "error",
+            "message": "Session Expired"
+        })
+
     if time.time() - session["otp_time"] > 300:
+
         return jsonify({
             "status": "error",
             "message": "OTP Expired"
         })
 
     if entered != session["login_otp"]:
+
         return jsonify({
             "status": "error",
             "message": "Invalid OTP"
