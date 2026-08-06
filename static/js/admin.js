@@ -67,18 +67,22 @@ function loadUsers() {
 
     <p>📧 ${user.email}</p>
 
-    <p>
+    <div class="password-row">
+
+    <span>
         🔑 Password :
         <span id="pass${user.id}">********</span>
+    </span>
 
-        <button
-            onclick="togglePassword(${user.id},'${user.password}')">
+    <button
+        class="show-btn"
+        onclick="togglePassword(${user.id},'${user.password}',this)">
 
-            👁 Show
+        👁 Show
 
-        </button>
+    </button>
 
-    </p>
+</div>
 
     <p>
         ${
@@ -128,18 +132,19 @@ function loadUsers() {
 
 }
 
-function togglePassword(id,password){
+function togglePassword(id,password,btn){
 
     let span=document.getElementById("pass"+id);
 
     if(span.innerHTML==="********"){
 
         span.innerHTML=password;
+        btn.innerHTML="🙈 Hide";
 
-    }
-    else{
+    }else{
 
         span.innerHTML="********";
+        btn.innerHTML="👁 Show";
 
     }
 

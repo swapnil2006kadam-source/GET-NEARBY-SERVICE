@@ -1212,3 +1212,30 @@ transform:translateY(-3px);
     }
 
 }
+
+.password-row{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:12px 0;
+
+}
+
+.show-btn{
+
+    width:auto;
+    padding:6px 14px;
+    border:none;
+    border-radius:8px;
+    background:#3b82f6;
+    color:white;
+    cursor:pointer;
+
+}
+
+.show-btn:hover{
+
+    background:#2563eb;
+
+}
