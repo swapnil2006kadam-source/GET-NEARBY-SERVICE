@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, jsonify, session
 from config.database import get_connection
 from datetime import datetime
 import os
-import requests,socket
+import requests
 from flask_mail import Mail, Message
 import random , time
 
@@ -21,6 +21,8 @@ app.config["MAIL_USE_SSL"] = os.getenv("MAIL_USE_SSL") == "True"
 app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
 app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
 app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
+print("MAIL_USE_TLS:", app.config["MAIL_USE_TLS"])
+print("MAIL_USE_SSL:", app.config["MAIL_USE_SSL"])
 mail = Mail(app)
 
 
@@ -132,23 +134,6 @@ GetNearby Team
 """
 
         print("STEP 3 - About to send email")
-
-        import socket
-
-        print("Checking SMTP connection...")
-
-        socket.setdefaulttimeout(10)
-
-        try:
-            s = socket.create_connection(
-                (app.config["MAIL_SERVER"], app.config["MAIL_PORT"])
-            )
-
-            print("✅ SMTP CONNECTED!")
-            s.close()
-
-        except Exception as smtp_error:
-            print("❌ SOCKET ERROR:", repr(smtp_error))
 
         mail.send(msg)
 

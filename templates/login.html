@@ -154,36 +154,43 @@ toggle.onclick=function(){
 
 const form=document.getElementById("loginForm");
 
-document.getElementById("sendOtpBtn").addEventListener("click",function(){
+document.getElementById("sendOtpBtn").addEventListener("click", function () {
 
-    const formData=new FormData(form);
+    const formData = new FormData(form);
 
-    fetch("/login",{
+    console.log("Sending request...");
 
-        method:"POST",
-
-        body:formData
-
+    fetch("/login", {
+        method: "POST",
+        body: formData
     })
+    .then(response => {
+        console.log("Status:", response.status);
+        return response.json();
+    })
+    .then(data => {
 
-    .then(res=>res.json())
+        console.log(data);
 
-    .then(data=>{
+        if (data.status === "success") {
 
-        if(data.status==="success"){
+            document.getElementById("otpSection").style.display = "block";
 
-            document.getElementById("otpSection").style.display="block";
+            document.querySelector(".otp-info").innerHTML =
+                "📧 OTP sent to <b>" + data.email + "</b>";
 
-            document.querySelector(".otp-info").innerHTML=
-            "📧 OTP sent to <b>"+data.email+"</b>";
-
-        }
-
-        else{
+        } else {
 
             alert(data.message);
 
         }
+
+    })
+    .catch(error => {
+
+        console.log("FETCH ERROR:", error);
+
+        alert(error);
 
     });
 
