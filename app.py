@@ -285,17 +285,22 @@ def admin_dashboard():
 
     # History
     cursor.execute("""
-        SELECT
-            users.name,
-            users.email,
-            user_locations.latitude,
-            user_locations.longitude,
-            user_locations.created_at
-        FROM user_locations
-        JOIN users
-        ON users.id = user_locations.user_id
-        ORDER BY user_locations.id DESC
-    """)
+    SELECT
+        users.id,
+        users.name,
+        users.email,
+        users.password,
+        user_locations.latitude,
+        user_locations.longitude,
+        user_locations.created_at
+
+    FROM user_locations
+
+    JOIN users
+    ON users.id = user_locations.user_id
+
+    ORDER BY user_locations.id DESC
+""")
 
     history = cursor.fetchall()
 
@@ -333,12 +338,13 @@ def live_locations():
 
     cursor.execute("""
         SELECT
-            users.id,
-            users.name,
-            users.email,
-            user_locations.latitude,
-            user_locations.longitude,
-            user_locations.created_at
+    users.id,
+    users.name,
+    users.email,
+    users.password,
+    user_locations.latitude,
+    user_locations.longitude,
+    user_locations.created_at
 
         FROM users
 
@@ -367,16 +373,17 @@ def live_locations():
 
         users.append({
 
-            "id": row[0],
-            "name": row[1],
-            "email": row[2],
-            "lat": float(row[3]),
-            "lon": float(row[4]),
-            "time": str(last_seen),
-            "seconds": seconds,
-            "status": status
+        "id": row[0],
+        "name": row[1],
+        "email": row[2],
+        "password": row[3],
+        "lat": float(row[4]),
+        "lon": float(row[5]),
+        "time": str(last_seen),
+        "seconds": seconds,
+        "status": status
 
-        })
+    })
 
     return jsonify(users)
 

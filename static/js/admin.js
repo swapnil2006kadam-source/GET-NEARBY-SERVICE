@@ -61,56 +61,87 @@ function loadUsers() {
 
             container.innerHTML += `
 
-            <div class="user-card">
+<div class="user-card">
 
-                <h3>👤 ${user.name}</h3>
+    <h3>👤 ${user.name}</h3>
 
-                <p>📧 ${user.email}</p>
+    <p>📧 ${user.email}</p>
 
-                <p>
-                    ${
-                        user.status == "Online"
-                        ? "🟢 Online"
-                        : "🔴 Offline"
-                    }
-                </p>
+    <p>
+        🔑 Password :
+        <span id="pass${user.id}">********</span>
 
-                <p>
-                    🕒 Updated ${user.seconds} sec ago
-                </p>
+        <button
+            onclick="togglePassword(${user.id},'${user.password}')">
 
-                <p>
-                    📍 ${user.lat},
-                    ${user.lon}
-                </p>
+            👁 Show
 
-                <div class="card-buttons">
+        </button>
 
-<a
-href="https://www.google.com/maps?q=${user.lat},${user.lon}"
-target="_blank"
-class="btn">
+    </p>
 
-🗺 Google Maps
+    <p>
+        ${
+            user.status=="Online"
+            ? "🟢 Online"
+            : "🔴 Offline"
+        }
+    </p>
 
-</a>
+    <p>
+        🕒 Updated ${user.seconds} sec ago
+    </p>
 
-<button
-class="delete-btn"
-onclick="deleteLocation(${user.id})">
+    <p>
+        📍 ${user.lat},
+        ${user.lon}
+    </p>
 
-🗑 Delete
+    <div class="card-buttons">
 
-</button>
+        <a
+        href="https://www.google.com/maps?q=${user.lat},${user.lon}"
+        target="_blank"
+        class="btn">
+
+        🗺 Google Maps
+
+        </a>
+
+        <button
+        class="delete-btn"
+        onclick="deleteLocation(${user.id})">
+
+        🗑 Delete
+
+        </button>
+
+    </div>
 
 </div>
-            </div>
 
-            `;
+`;
 
         });
 
     });
+
+}
+
+function togglePassword(id,password){
+
+    let span=document.getElementById("pass"+id);
+
+    if(span.innerHTML==="********"){
+
+        span.innerHTML=password;
+
+    }
+    else{
+
+        span.innerHTML="********";
+
+    }
 
 }
 
