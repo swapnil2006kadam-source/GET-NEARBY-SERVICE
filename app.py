@@ -362,7 +362,7 @@ def live_locations():
 
     for row in rows:
 
-        last_seen = row[5]
+        last_seen = row[6]
 
         seconds = int((datetime.now() - last_seen).total_seconds())
 
