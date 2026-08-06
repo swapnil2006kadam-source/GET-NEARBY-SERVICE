@@ -3,7 +3,6 @@ from config.database import get_connection
 from datetime import datetime
 import os
 import requests
-from flask_mail import Mail, Message
 import random , time
 
 from dotenv import load_dotenv
@@ -11,19 +10,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GEOAPIFY_API_KEY = os.getenv("GEOAPIFY_API_KEY")
-
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 
 app = Flask(__name__)
-app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
-app.config["MAIL_PORT"] = int(os.getenv("MAIL_PORT"))
-app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS") == "True"
-app.config["MAIL_USE_SSL"] = os.getenv("MAIL_USE_SSL") == "True"
-app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
-app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
-app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_DEFAULT_SENDER")
-print("MAIL_USE_TLS:", app.config["MAIL_USE_TLS"])
-print("MAIL_USE_SSL:", app.config["MAIL_USE_SSL"])
-mail = Mail(app)
 
 
 app.secret_key = "get_nearby_services_secret_key"
@@ -96,6 +85,7 @@ def login():
             "message": "Invalid Email or Password"
         })
 
+    # Generate OTP
     otp = random.randint(100000, 999999)
 
     session["login_otp"] = str(otp)
@@ -106,42 +96,61 @@ def login():
 
     try:
 
-        print("========== LOGIN DEBUG ==========")
-        print("STEP 1")
-        print("MAIL_SERVER:", app.config["MAIL_SERVER"])
-        print("MAIL_PORT:", app.config["MAIL_PORT"])
-        print("MAIL_USERNAME:", app.config["MAIL_USERNAME"])
-        print("MAIL_DEFAULT_SENDER:", app.config["MAIL_DEFAULT_SENDER"])
+        headers = {
+            "accept": "application/json",
+            "api-key": BREVO_API_KEY,
+            "content-type": "application/json"
+        }
 
-        print("STEP 2 - Creating Message")
+        data = {
+            "sender": {
+                "name": "Get Nearby Services",
+                "email": "swapnil2006kadam@gmail.com"
+            },
 
-        msg = Message(
-            subject="Nearby Services Login OTP",
-            recipients=[email]
+            "to": [
+                {
+                    "email": email,
+                    "name": user[1]
+                }
+            ],
+
+            "subject": "Nearby Services Login OTP",
+
+            "htmlContent": f"""
+            <h2>Hello {user[1]}</h2>
+
+            <p>Your OTP is:</p>
+
+            <h1 style='color:#2563eb'>{otp}</h1>
+
+            <p>This OTP is valid for <b>5 minutes</b>.</p>
+
+            <br>
+
+            <p>Regards,<br><b>Get Nearby Services Team</b></p>
+            """
+        }
+
+        response = requests.post(
+            "https://api.brevo.com/v3/smtp/email",
+            headers=headers,
+            json=data,
+            timeout=15
         )
 
-        msg.body = f"""
-Hello {user[1]},
+        print("STATUS:", response.status_code)
+        print("BODY:", response.text)
 
-Your OTP is:
-
-{otp}
-
-This OTP is valid for 5 minutes.
-
-Regards,
-GetNearby Team
-"""
-
-        print("STEP 3 - About to send email")
-
-        mail.send(msg)
-
-        print("STEP 4 - OTP Sent Successfully")
+        if response.status_code not in [200, 201]:
+            return jsonify({
+                "status": "error",
+                "message": response.text
+            })
 
     except Exception as e:
 
-        print("========== MAIL ERROR ==========")
+        print("========== API ERROR ==========")
         print(repr(e))
 
         return jsonify({
