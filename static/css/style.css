@@ -1239,3 +1239,28 @@ transform:translateY(-3px);
     background:#2563eb;
 
 }
+
+#users-container{
+
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+
+}
+
+.user-card{
+
+    background:#1e293b;
+    border:1px solid #334155;
+    border-radius:18px;
+    padding:22px;
+    transition:.3s;
+
+}
+
+.user-card:hover{
+
+    transform:translateY(-4px);
+    box-shadow:0 12px 25px rgba(0,0,0,.35);
+
+}
