@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, jsonify, session
 from config.database import get_connection
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 import requests
 import random , time
@@ -364,12 +364,29 @@ def live_locations():
 
         last_seen = row[6]
 
-        seconds = int((datetime.now() - last_seen).total_seconds())
+        seconds = int(
+    (datetime.now(timezone.utc) - last_seen.replace(tzinfo=timezone.utc)).total_seconds()
+)
 
         if seconds <= 30:
             status = "Online"
         else:
             status = "Offline"
+        if seconds < 60:
+
+            updated = f"{seconds} sec ago"
+        elif seconds < 3600:
+
+            updated = f"{seconds // 60} min ago"
+
+        elif seconds < 86400:
+
+            updated = f"{seconds // 3600} hr ago"
+
+        else:
+
+            updated = f"{seconds // 86400} day ago"
+
 
         users.append({
 
@@ -381,9 +398,17 @@ def live_locations():
         "lon": float(row[5]),
         "time": str(last_seen),
         "seconds": seconds,
-        "status": status
+        "status": status,
+        "updated": updated
 
     })
+
+        users.sort(
+    key=lambda x: (
+        x["status"] != "Online",
+        x["name"].lower()
+    )
+)
 
     return jsonify(users)
 

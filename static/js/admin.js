@@ -93,7 +93,7 @@ function loadUsers() {
     </p>
 
     <p>
-        🕒 Updated ${user.seconds} sec ago
+        🕒 Updated ${user.updated}
     </p>
 
     <p>

@@ -25,11 +25,11 @@ href="{{ url_for('static', filename='css/style.css') }}">
 
     <div class="welcome-card">
 
-        <h1>👋 Welcome, {{ name }}</h1>
+        <h1>👋HELLO, {{ name }}</h1>
 
         <p>
 
-            Ready to discover nearby services?
+            LETS DISCOVER NEARBY SERVICES TOGETHER
 
         </p>
 
@@ -164,6 +164,72 @@ href="{{ url_for('static', filename='css/style.css') }}">
 </div>
 
 </div>
+
+</div>
+
+</div>
+
+<script>
+
+function updateLocation(){
+
+    if(!navigator.geolocation){
+
+        console.log("Geolocation not supported");
+
+        return;
+
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position){
+
+        fetch("/save-location",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                latitude:position.coords.latitude,
+
+                longitude:position.coords.longitude
+
+            })
+
+        })
+
+        .then(res=>res.json())
+
+        .then(data=>{
+
+            console.log("Location Updated");
+
+        })
+
+        .catch(err=>{
+
+            console.log(err);
+
+        });
+
+    });
+
+}
+
+// Update immediately
+updateLocation();
+
+// Update every 10 seconds
+setInterval(updateLocation,10000);
+
+</script>
+
+</body>
+
+</html>
 
 </body>
 
